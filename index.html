@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PYT | Grow Your Value - Inteligencia Artificial Financiera</title>
+    <meta name="description" content="Plataforma de inteligencia financiera basada en IA y Machine Learning. Bots bajo demanda y detección de activos de alta rentabilidad en tu móvil.">
+    
+    <!-- Fuentes Elegantes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Animaciones -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Iconos (Lucide - UMD build for browser support) -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'pyt-black': '#020202',
+                        'pyt-charcoal': '#0A0A0A',
+                        'pyt-card': '#111111',
+                        'pyt-gold': '#D4AF37',
+                        'pyt-gold-light': '#F3E5AB',
+                        'telegram': '#229ED9',
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glow': '0 0 50px rgba(212, 175, 55, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #020202;
+            color: #e5e5e5;
+            overflow-x: hidden;
+            position: relative;
+            margin: 0;
+        }
+
+        /* --- CANVAS DE PARTÍCULAS (INTERACTIVO) --- */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none; /* Permite clicar a través */
+        }
+
+        /* --- EFECTO LUZ CELESTIAL (HERO ONLY) --- */
+        .spotlight-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .divine-spotlight {
+            position: absolute;
+            top: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 600px;
+            background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0.08) 0%, rgba(212, 175, 55, 0.05) 40%, transparent 100%);
+            filter: blur(60px);
+            opacity: 0.8;
+            animation: spotlight-breathe 10s ease-in-out infinite;
+        }
+
+        @keyframes spotlight-breathe {
+            0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.8; transform: translateX(-50%) scale(1.1); }
+        }
+
+        /* Estilos Generales Texto */
+        .text-gradient-gold {
+            background: linear-gradient(to right, #F3E5AB, #D4AF37, #C5A028);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass-panel {
+            background: rgba(15, 15, 15, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            z-index: 10;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #D4AF37 0%, #B4941F 100%);
+            color: #000;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+        }
+        
+        .hover-card:hover {
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+        }
+
+        .telegram-btn {
+            background: #229ED9;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .telegram-btn:hover {
+            background: #1c8bb3;
+            box-shadow: 0 0 25px rgba(34, 158, 217, 0.4);
+            transform: translateY(-1px);
+        }
+        
+        /* Asegurar que el contenido esté por encima del canvas */
+        section, nav, header, footer {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-gray-300 selection:bg-pyt-gold selection:text-black">
+
+    <!-- CANVAS DE PARTÍCULAS INTERACTIVAS -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- NAVBAR -->
+    <nav class="fixed w-full z-50 glass-panel border-b-0 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-4 group no-underline">
+                <img src="https://placehold.co/100x100/000000/D4AF37?text=P" alt="PYT Logo" class="h-9 w-9 rounded-full object-cover border border-pyt-gold/30 shadow-glow opacity-90 group-hover:opacity-100 transition">
+                <div class="flex flex-col">
+                    <span class="text-sm font-serif font-bold tracking-[0.2em] text-white leading-none">PYT</span>
+                </div>
+            </a>
+            
+            <div class="hidden md:flex items-center gap-10 text-[10px] font-medium tracking-[0.15em] uppercase text-gray-400">
+                <a href="#ia" class="hover:text-white transition duration-500">Tecnología</a>
+                <a href="#scanner" class="hover:text-white transition duration-500">Market Scanner</a>
+                <a href="#membresia" class="hover:text-white transition duration-500">Planes</a>
+                <a href="https://t.me/PYTTrading" target="_blank" class="text-pyt-gold hover:text-white transition duration-300 border border-pyt-gold/30 px-4 py-2 rounded hover:bg-pyt-gold/10">
+                    Acceso Oficial
+                </a>
+            </div>
+
+            <button class="md:hidden text-white">
+                <i data-lucide="menu" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION: FOCO Y POLVO DE ORO -->
+    <header class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-transparent">
+        
+        <!-- Solo el Foco de luz aquí (las partículas son globales) -->
+        <div class="spotlight-container">
+            <div class="divine-spotlight"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 text-center relative z-20" data-aos="fade-up" data-aos-duration="1500">
+            
+            <!-- Badge Tecnológico -->
+            <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 bg-black/40 backdrop-blur-md mb-12 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+                <div class="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e] animate-pulse"></div>
+                <p class="text-gray-300 text-[9px] md:text-[10px] font-bold tracking-[0.3em] uppercase">
+                    Quantitative Intelligence
+                </p>
+            </div>
+            
+            <!-- TÍTULO -->
+            <h1 class="text-4xl md:text-6xl lg:text-8xl font-serif font-bold leading-none tracking-wide text-white mb-6 drop-shadow-2xl">
+                PUSH YOUR <br class="md:hidden" /> TRADING
+            </h1>
+            
+            <!-- ESLOGAN -->
+            <p class="text-lg md:text-xl font-light italic text-gradient-gold mb-12 tracking-widest opacity-90">
+                Grow Your Value
+            </p>
+            
+            <p class="text-gray-300 text-sm md:text-base font-light leading-relaxed mb-16 max-w-xl mx-auto tracking-wide">
+                Algoritmos de precisión y análisis de valor institucional.<br>
+                Centralizado en su dispositivo móvil.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                <a href="https://t.me/PYTTrading" target="_blank" class="btn-gold w-64 py-4 text-[10px] font-bold tracking-[0.25em] uppercase rounded-sm flex items-center justify-center gap-3 shadow-glow">
+                    Comenzar Ahora <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+                <a href="#ia" class="group flex items-center gap-2 text-[10px] font-medium tracking-[0.25em] uppercase text-gray-400 hover:text-white transition">
+                    <span class="border-b border-transparent group-hover:border-white pb-1 transition">Ver Tecnología</span>
+                    <i data-lucide="chevron-down" class="w-3 h-3 group-hover:translate-y-1 transition"></i>
+                </a>
+            </div>
+        </div>
+        
+    </header>
+
+    <!-- TECNOLOGÍA IA (TEXTOS EN BLANCO) -->
+    <section id="ia" class="py-32 bg-pyt-charcoal relative border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-24" data-aos="fade-up">
+                
+                <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-pyt-gold/10 bg-pyt-gold/5 mb-8">
+                    <p class="text-pyt-gold text-[9px] md:text-[10px] font-bold tracking-[0.3em] uppercase">
+                        Inteligencia Artificial
+                    </p>
+                </div>
+
+                <h2 class="text-3xl md:text-5xl font-serif mb-8 text-white leading-tight">
+                    Análisis de Datos. <br>
+                    <span class="italic text-pyt-gold">Resultados Reales.</span>
+                </h2>
+                <!-- Texto aclarado a gray-200 -->
+                <p class="text-gray-200 max-w-3xl mx-auto text-lg md:text-xl font-light leading-relaxed border-l-2 border-pyt-gold pl-6 text-left md:text-center md:border-l-0 md:pl-0">
+                    Mientras el mercado duerme, nuestros modelos de Machine Learning procesan <strong class="text-white font-normal">millones de puntos de datos</strong> históricos y fundamentales. Filtramos el ruido emocional para entregarle únicamente lo que importa: <span class="text-pyt-gold">oportunidades estadísticas de alta probabilidad.</span>
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Cards Minimalistas - Texto aclarado -->
+                <div class="glass-panel p-10 rounded-sm hover:border-pyt-gold/30 transition duration-700 group relative overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition transform group-hover:scale-110">
+                        <i data-lucide="bot" class="w-24 h-24 text-white"></i>
+                    </div>
+                    <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-pyt-gold mb-8 border border-white/10 group-hover:bg-pyt-gold group-hover:text-black transition shadow-lg">
+                        <i data-lucide="bot" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-serif text-white mb-4">Bots Bajo Demanda</h3>
+                    <p class="text-xs text-gray-300 leading-loose font-light">
+                        Su analista personal 24/7. Solicite análisis técnicos o fundamentales de cualquier ticker al instante.
+                    </p>
+                </div>
+
+                <div class="glass-panel p-10 rounded-sm hover:border-pyt-gold/30 transition duration-700 group relative overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition transform group-hover:scale-110">
+                        <i data-lucide="radar" class="w-32 h-32 text-white"></i>
+                    </div>
+                    <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-pyt-gold mb-8 border border-white/10 group-hover:bg-pyt-gold group-hover:text-black transition shadow-lg">
+                        <i data-lucide="bar-chart-2" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-serif text-white mb-4">Scanner de Rentabilidad</h3>
+                    <p class="text-xs text-gray-300 leading-loose font-light">
+                        Algoritmos que clasifican el mercado diariamente para detectar el mayor potencial de Alpha.
+                    </p>
+                </div>
+
+                <div class="glass-panel p-10 rounded-sm hover:border-pyt-gold/30 transition duration-700 group relative overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition transform group-hover:scale-110">
+                        <i data-lucide="smartphone" class="w-32 h-32 text-white"></i>
+                    </div>
+                    <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-pyt-gold mb-8 border border-white/10 group-hover:bg-pyt-gold group-hover:text-black transition shadow-lg">
+                        <i data-lucide="smartphone" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-serif text-white mb-4">Datos de alto valor en tu movil</h3>
+                    <p class="text-xs text-gray-300 leading-loose font-light">
+                        Alertas de "Smart Money" y fundamentales clave directamente en su bolsillo.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GLOBAL MARKET SCANNER -->
+    <section id="scanner" class="py-32 bg-[#080808] relative border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div data-aos="fade-right">
+                    <div class="inline-block mb-6">
+                        <p class="text-pyt-gold text-[10px] font-bold tracking-[0.3em] uppercase flex items-center gap-2">
+                            <i data-lucide="search" class="w-4 h-4"></i> Global Screening
+                        </p>
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-serif text-white mb-8 leading-tight">
+                        No adivine.<br>
+                        Elija la <span class="italic text-gradient-gold">Mejor Inversión.</span>
+                    </h2>
+                    <p class="text-gray-300 text-lg font-light leading-relaxed mb-8">
+                        Mientras un trader promedio vigila 10 acciones, <strong class="text-white">nuestro sistema monitoriza más de 10.000 activos simultáneamente.</strong>
+                    </p>
+                    
+                    <ul class="space-y-6 mb-10">
+                        <li class="flex items-start gap-4">
+                            <span class="text-pyt-gold font-serif text-2xl">1.</span>
+                            <div>
+                                <h4 class="text-white font-medium mb-1">Filtrado Masivo</h4>
+                                <p class="text-sm text-gray-400 font-light">Descartamos el 99% del mercado (ruido).</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <span class="text-pyt-gold font-serif text-2xl">2.</span>
+                            <div>
+                                <h4 class="text-white font-medium mb-1">Ranking Cuantitativo</h4>
+                                <p class="text-sm text-gray-400 font-light">Asignamos un "PYT Score" basado en data institucional.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <span class="text-pyt-gold font-serif text-2xl">3.</span>
+                            <div>
+                                <h4 class="text-white font-medium mb-1">Selección del Ganador</h4>
+                                <p class="text-sm text-gray-400 font-light">Le entregamos la mayor asimetría Riesgo/Beneficio.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="relative" data-aos="fade-left">
+                    <div class="absolute inset-0 bg-pyt-gold opacity-5 blur-[100px] rounded-full"></div>
+                    <div class="relative bg-[#0C0C0C] border border-white/10 rounded-sm p-8 shadow-2xl">
+                        <div class="font-mono text-xs text-green-500 mb-4 animate-pulse">SCANNING MARKET...</div>
+                        <div class="space-y-4">
+                             <div class="flex justify-between text-gray-500 border-b border-gray-800 pb-2">
+                                <span>TICKER</span><span>SCORE</span>
+                            </div>
+                            <div class="flex justify-between text-gray-400">
+                                <span>AAPL</span><span class="text-red-500">42</span>
+                            </div>
+                            <div class="flex justify-between text-gray-400">
+                                <span>MSFT</span><span class="text-yellow-500">68</span>
+                            </div>
+                            <div class="flex justify-between items-center bg-white/5 p-3 -mx-3 rounded border border-pyt-gold/30">
+                                <span class="text-white font-bold">NVDA</span>
+                                <span class="text-pyt-gold font-bold text-lg">98.5</span>
+                            </div>
+                             <div class="flex justify-between text-gray-400">
+                                <span>TSLA</span><span class="text-gray-600">55</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="membresia" class="py-32 bg-transparent border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl md:text-6xl font-serif mb-6 text-white">La Clave del Éxito</h2>
+            </div>
+
+            <div class="max-w-lg mx-auto">
+                
+                <!-- SINGLE FREE PLAN (ALL FEATURES INCLUDED) -->
+                <div class="relative border border-pyt-gold/40 bg-pyt-gold/5 p-12 text-center backdrop-blur-sm" data-aos="fade-up">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-pyt-gold text-black text-[9px] font-bold px-4 py-1 tracking-[0.2em] uppercase">
+                        Acceso Total
+                    </div>
+                    <h3 class="text-3xl font-serif text-white mb-2">FREE</h3>
+                    <div class="text-6xl font-serif text-white mb-2">0€</div>
+                    <p class="text-xs text-gray-400 mb-10 uppercase tracking-widest">Vitalicio</p>
+                    
+                    <ul class="text-left text-sm space-y-5 mb-12 text-gray-200 font-light pl-4">
+                        <li class="flex items-center gap-4"><i data-lucide="check" class="w-5 h-5 text-pyt-gold"></i> <strong class="text-white font-normal">Bots bajo demanda ilimitados</strong></li>
+                        <li class="flex items-center gap-4"><i data-lucide="check" class="w-5 h-5 text-pyt-gold"></i> Scanner de Rentabilidad (ML)</li>
+                        <li class="flex items-center gap-4"><i data-lucide="check" class="w-5 h-5 text-pyt-gold"></i> Alertas de Activos "Deep Value"</li>
+                        <li class="flex items-center gap-4"><i data-lucide="check" class="w-5 h-5 text-pyt-gold"></i> Datos Valiosos en Tiempo Real</li>
+                        <li class="flex items-center gap-4"><i data-lucide="check" class="w-5 h-5 text-pyt-gold"></i> Canal de Noticias Filtradas</li>
+                        <li class="flex items-center gap-4"><i data-lucide="check" class="w-5 h-5 text-pyt-gold"></i> Resumen Semanal IA</li>
+                    </ul>
+
+                    <a href="https://t.me/PYTTrading" target="_blank" class="block w-full py-5 bg-pyt-gold text-black font-bold tracking-[0.2em] uppercase text-[10px] hover:bg-white transition shadow-[0_0_20px_rgba(212,175,55,0.3)]">
+                        Obtener Acceso
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/5 bg-transparent py-16">
+        <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
+            <div class="h-10 w-10 rounded-full bg-white/5 flex items-center justify-center text-pyt-gold font-serif text-sm font-bold border border-pyt-gold/20 mx-auto mb-6">P</div>
+            
+            <!-- Redes Sociales -->
+            <div class="flex justify-center items-center gap-6 mb-8">
+                <!-- X (Twitter) -->
+                <a href="https://x.com/PushYourTrading" target="_blank" class="text-gray-500 hover:text-white transition-colors duration-300">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                    </svg>
+                </a>
+            </div>
+
+            <p class="text-gray-600 text-[10px] font-medium tracking-widest uppercase">
+                &copy; 2024 Push Your Trading.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        lucide.createIcons();
+        AOS.init({ once: true, offset: 50, duration: 1200, easing: 'ease-out-cubic' });
+
+        // SCRIPT DE PARTÍCULAS INTERACTIVAS CON CANVAS
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let mouse = {
+            x: null,
+            y: null,
+            radius: 150 
+        }
+
+        window.addEventListener('mousemove', function(event) {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+                this.color = color;
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = '#D4AF37'; 
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = '#D4AF37';
+                ctx.globalAlpha = 0.6;
+                ctx.fill();
+            }
+
+            update() {
+                if (this.x > canvas.width || this.x < 0) {
+                    this.directionX = -this.directionX;
+                }
+                if (this.y > canvas.height || this.y < 0) {
+                    this.directionY = -this.directionY;
+                }
+
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx*dx + dy*dy);
+
+                if (distance < mouse.radius) {
+                    const forceDirectionX = dx / distance;
+                    const forceDirectionY = dy / distance;
+                    const maxDistance = mouse.radius;
+                    const force = (maxDistance - distance) / maxDistance;
+                    const directionX = forceDirectionX * force * 2; 
+                    const directionY = forceDirectionY * force * 2;
+
+                    this.x += directionX;
+                    this.y += directionY;
+                } else {
+                    this.x += this.directionX;
+                    this.y += this.directionY;
+                }
+                
+                this.draw();
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 15000; 
+            
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 2) + 1;
+                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                let directionX = (Math.random() * 0.4) - 0.2; 
+                let directionY = (Math.random() * 0.4) - 0.2;
+                let color = '#D4AF37';
+
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+        }
+
+        window.addEventListener('resize', function() {
+            canvas.width = innerWidth;
+            canvas.height = innerHeight;
+            init();
+        });
+        
+        window.addEventListener('mouseout', function(){
+            mouse.x = undefined;
+            mouse.y = undefined;
+        });
+
+        init();
+        animate();
+    </script>
+</body>
+</html>

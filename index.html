@@ -198,7 +198,7 @@
             </p>
             
             <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                <a href="https://t.me/PYTTrading" target="_blank" class="btn-gold w-64 py-4 text-[10px] font-bold tracking-[0.25em] uppercase rounded-sm flex items-center justify-center gap-3 shadow-glow">
+                <a href="#membresia" class="btn-gold w-64 py-4 text-[10px] font-bold tracking-[0.25em] uppercase rounded-sm flex items-center justify-center gap-3 shadow-glow">
                     Comenzar Ahora <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </a>
                 <a href="#ia" class="group flex items-center gap-2 text-[10px] font-medium tracking-[0.25em] uppercase text-gray-400 hover:text-white transition">
@@ -213,19 +213,18 @@
     <section id="ia" class="py-32 bg-pyt-charcoal relative border-t border-white/5">
         <div class="max-w-7xl mx-auto px-6 relative z-10">
             <div class="text-center mb-24" data-aos="fade-up">
-                <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-pyt-gold/10 bg-pyt-gold/5 mb-8">
-                    <p class="text-pyt-gold text-[9px] md:text-[10px] font-bold tracking-[0.3em] uppercase">Inteligencia Artificial</p>
+                <div class="inline-flex items-center gap-3 px-6 py-2 rounded-full border border-pyt-gold/20 bg-pyt-gold/5 mb-8">
+                    <p class="text-pyt-gold text-[9px] md:text-[10px] font-bold tracking-[0.3em] uppercase">Trading basado en datos</p>
                 </div>
                 <h2 class="text-3xl md:text-5xl font-serif mb-8 text-white leading-tight">
-                    Análisis de Datos. <br>
-                    <span class="italic text-pyt-gold">Resultados Reales.</span>
+                    Nuestra tecnología basada en algoritmos <br>
+                    <span class="italic text-pyt-gold text-4xl md:text-6xl">con resultados Probados.</span>
                 </h2>
                 <p class="text-gray-200 max-w-3xl mx-auto text-lg md:text-xl font-light leading-relaxed">
                     Mientras el mercado duerme, nuestros modelos de Machine Learning procesan <strong class="text-white font-normal">millones de puntos de datos</strong>. Filtramos el ruido emocional para entregarle únicamente <span class="text-pyt-gold">oportunidades estadísticas.</span>
                 </p>
             </div>
 
-            <!-- MARCO DORADO RESALTADO -->
             <div class="p-1 sm:p-2 rounded-sm bg-gradient-to-br from-pyt-gold/40 via-pyt-gold/10 to-pyt-gold/40 shadow-glow" data-aos="zoom-in">
                 <div class="grid md:grid-cols-3 gap-1 bg-pyt-charcoal rounded-sm overflow-hidden">
                     <div class="glass-panel p-10 hover:bg-white/[0.02] transition duration-700 group relative overflow-hidden border-0">
@@ -245,7 +244,7 @@
                     </div>
 
                     <div class="glass-panel p-10 hover:bg-white/[0.02] transition duration-700 group relative overflow-hidden border-0">
-                        <div class="w-16 h-16 bg-pyt-gold text-black rounded-2xl flex items-center justify-center mb-8 border border-white/10 transition shadow-lg shadow-pyt-gold/20">
+                        <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-pyt-gold mb-8 border border-white/10 group-hover:bg-pyt-gold group-hover:text-black transition shadow-lg">
                             <i data-lucide="file-text" class="w-8 h-8"></i>
                         </div>
                         <h3 class="text-xl font-serif text-white mb-4">Tesis de Inversión</h3>
@@ -356,13 +355,6 @@
     <footer class="border-t border-white/5 bg-transparent py-16">
         <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
             <div class="h-10 w-10 rounded-full bg-white/5 flex items-center justify-center text-pyt-gold font-serif text-sm font-bold border border-pyt-gold/20 mx-auto mb-6">P</div>
-            
-            <div class="flex justify-center items-center gap-6 mb-8">
-                <a href="https://x.com/PushYourTrading" target="_blank" class="text-gray-500 hover:text-white transition-colors duration-300">
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
-                </a>
-            </div>
-
             <p class="text-gray-600 text-[10px] font-medium tracking-widest uppercase">&copy; 2026 Push Your Trading.</p>
         </div>
     </footer>
@@ -376,35 +368,54 @@
         const ctx = canvas.getContext('2d');
         let particlesArray;
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        // Configuración de pantalla completa
+        function setCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        setCanvasSize();
 
-        let mouse = { x: null, y: null, radius: 150 }
-        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+        let mouse = { x: null, y: null, radius: 180 }
+        window.addEventListener('mousemove', (e) => { 
+            mouse.x = e.x; 
+            mouse.y = e.y; 
+        });
 
         class Particle {
             constructor(x, y, directionX, directionY, size) {
-                this.x = x; this.y = y;
-                this.directionX = directionX; this.directionY = directionY;
+                this.x = x; 
+                this.y = y;
+                this.directionX = directionX; 
+                this.directionY = directionY;
                 this.size = size;
+                this.baseSize = size;
             }
+            
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fillStyle = '#D4AF37';
-                ctx.globalAlpha = 0.4;
+                ctx.globalAlpha = 0.5;
                 ctx.fill();
             }
+
             update() {
+                // Rebote en bordes
                 if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
                 if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
                 
+                // Interacción con ratón (Efecto de empuje suave)
                 let dx = mouse.x - this.x;
                 let dy = mouse.y - this.y;
                 let distance = Math.sqrt(dx*dx + dy*dy);
 
                 if (distance < mouse.radius) {
-                    this.x -= dx/10; this.y -= dy/10;
+                    const force = (mouse.radius - distance) / mouse.radius;
+                    this.x -= dx * force * 0.05;
+                    this.y -= dy * force * 0.05;
+                    this.size = this.baseSize * 1.5;
+                } else {
+                    if(this.size > this.baseSize) this.size -= 0.1;
                 }
                 
                 this.x += this.directionX;
@@ -413,30 +424,59 @@
             }
         }
 
+        // Función para conectar partículas (Efecto Neural)
+        function connect() {
+            let opacityValue = 1;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let dx = particlesArray[a].x - particlesArray[b].x;
+                    let dy = particlesArray[a].y - particlesArray[b].y;
+                    let distance = Math.sqrt(dx*dx + dy*dy);
+
+                    if (distance < 150) {
+                        opacityValue = 1 - (distance/150);
+                        ctx.strokeStyle = `rgba(212, 175, 55, ${opacityValue * 0.15})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
         function init() {
             particlesArray = [];
-            let n = (canvas.height * canvas.width) / 15000;
-            for (let i = 0; i < n; i++) {
-                let size = Math.random() * 2 + 1;
-                let x = Math.random() * innerWidth;
-                let y = Math.random() * innerHeight;
-                let dx = (Math.random() * 0.4) - 0.2;
-                let dy = (Math.random() * 0.4) - 0.2;
-                particlesArray.push(new Particle(x, y, dx, dy, size));
+            // Ajustar densidad según resolución
+            let numberOfParticles = (canvas.height * canvas.width) / 12000;
+            if (numberOfParticles > 120) numberOfParticles = 120; // Límite para rendimiento
+
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 2) + 0.5;
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height;
+                let directionX = (Math.random() * 0.6) - 0.3;
+                let directionY = (Math.random() * 0.6) - 0.3;
+                particlesArray.push(new Particle(x, y, directionX, directionY, size));
             }
         }
 
         function animate() {
-            ctx.clearRect(0, 0, innerWidth, innerHeight);
-            particlesArray.forEach(p => p.update());
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connect();
             requestAnimationFrame(animate);
         }
 
         window.addEventListener('resize', () => {
-            canvas.width = innerWidth; canvas.height = innerHeight;
+            setCanvasSize();
             init();
         });
 
+        // Iniciar
         init();
         animate();
     </script>
